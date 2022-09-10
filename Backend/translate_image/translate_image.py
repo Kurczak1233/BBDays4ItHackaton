@@ -1,15 +1,10 @@
-import json
+from translate_image.controllers.translate_image_controller import TranslateImageController
 
 
 def translate(event, context):
     print(event)
     print(context)
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": json.dumps({
-            "Region ": 'Goodbye World!'
-        })
-    }
+
+    url = 'https://doc.infogixsaas.com/govern/Content/Resources/Images/user-guide/govern-navigation-5_800x401.png'
+
+    return TranslateImageController().execute(url)
