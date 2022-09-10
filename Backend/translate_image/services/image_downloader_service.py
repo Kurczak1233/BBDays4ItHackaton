@@ -3,7 +3,7 @@ from urllib.request import urlopen
 from PIL import Image
 
 
-class ImageDownloader:
+class ImageDownloaderService:
     def __init__(self):
         pass
 
