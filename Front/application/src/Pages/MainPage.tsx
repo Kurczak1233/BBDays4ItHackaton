@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./MainPage.module.scss";
 import { createPortal } from "react-dom";
-import { IFrame } from "../components/IFrame/IFrame";
 
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
@@ -11,17 +10,48 @@ const MainPage = () => {
     setInputLink(inputLink);
   };
 
-  const applyInputLink = () => {
-    if (inputLink !== "" && inputLink) {
-      setShowIFrame(true);
-    }
+  const applyInputLink = async () => {
+    // if (inputLink !== "" && inputLink) {
+    await setShowIFrame(true);
+    // }
   };
+
+  const iframeContent =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    document.getElementById("iframe");
+  console.log(iframeContent);
+
+  //   console.log(iframeContent);
+
+  //   http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=de&tl=bg
+
+  //http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de
+  // 1. SOURCE
+  // 2. DESTINATION
+
+  //   const getPage = async () => {
+  //     const result = await fetch(
+  //       "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de",
+  //       { mode: "no-cors" }
+  //     );
+
+  //     console.log(result);
+  //   };
+  //   useEffect(() => {
+  //     getPage();
+  //   }, []);
 
   return (
     <>
       <header className={styles.header}>Header</header>
       {showIFrame ? (
-        <iframe height={"100%"} width={"100%"} src={inputLink}></iframe>
+        <iframe
+          id={"iframe"}
+          height={"100%"}
+          width={"100%"}
+          src={`https://pl-reactjs-org.translate.goog/?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=pl`}
+        ></iframe>
       ) : (
         <main className={styles.main}>
           <div className={styles.inputWrapper}>
