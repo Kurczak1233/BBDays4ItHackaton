@@ -1,0 +1,42 @@
+service: ${self:custom.prefix}
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  region: ${opt:region}
+  stage: ${opt:stage}
+  stackName: ${self:custom.prefix}-access
+  iam:
+    role:
+      name: ${self:custom.prefix}-access-role
+      statements:
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 'iam:DeleteBucket'
+  deploymentBucket:
+    name: ${self:custom.prefix}-deployments
+
+
+plugins:
+  - serverless-deployment-bucket
+
+custom:
+  prefix: image-translator-${self:provider.stage}-${self:provider.region}
+
+functions:
+  api:
+    handler: translate_image.translate_image.translate
+    package:
+      include:
+        - ./translate_image/**
+      exclude:
+        - ./**
+    events:
+      - http:
+          path: translate
+          method: ANY
+          cors:
+            origin: '*'
