@@ -1,16 +1,47 @@
+import json
+
 from PIL import Image
-from PIL import ImageDraw
+from types import SimpleNamespace
 
-filename = "test"
+from draw_text_on_image import draw_text_on_image
 
-# open image
-img = Image.open('img/test.jpg')
+file_test_name = "test.jpg"
+image = Image.open(f'img/{file_test_name}')
 
-# draw image object
-img_with_text = ImageDraw.Draw(img)
 
-# add text to image
-img_with_text.text((28, 36), "hello world", fill=(255, 0, 0))
+def get_ocr_response():
+    f = open('response_examples/test_reponse.json')
+    x = json.load(f)
+    return x["TextDetections"]
 
-# save image
-img.save('output/test.jpg')
+
+def filter_only_lines_in_response(response):
+    only_lines = []
+    for text_detection in response:
+        if text_detection["Type"] == "LINE":
+            only_lines.append(text_detection)
+
+    return only_lines
+
+
+response = get_ocr_response()
+filtered_response = filter_only_lines_in_response(response)
+print(filtered_response)
+
+# file_test2_name = "test2.png"
+#
+# image = Image.open(f'img/{file_test_name}')
+# text_coordinates = (28, 36)
+# text = "hejka"
+# text_color = (255, 0, 0)
+#
+# image2 = Image.open(f'img/{file_test2_name}')
+# text_coordinates2 = (50, 60)
+# text2 = "hejka2"
+# text_color2 = (255, 0, 255)
+#
+# img1 = draw_text_on_image(image, text, text_coordinates, text_color)
+# img1.save(f'output/{file_test_name}')
+# img2 = draw_text_on_image(image2, text2, text_coordinates2, text_color2)
+# img2.save(f'output/{file_test2_name}')
+#
