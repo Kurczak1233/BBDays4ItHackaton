@@ -2,24 +2,23 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 class ImageTextProcessor:
-    def __init__(self):
-        pass
 
-    def change_text_on_image(self, image: Image, text_lines_to_translate):
+    def change_text_on_image(self, image: Image, text_lines_to_translate, translated_text_array):
         translated_image = image
 
-        for text_line in text_lines_to_translate:
-            translated_image = self.change_text_line_on_image(translated_image, text_line)
+        for index, text_line in enumerate(text_lines_to_translate):
+            translated_image = self.change_text_line_on_image(translated_image, text_line, translated_text_array[index])
 
-    def change_text_line_on_image(self, image, text_line):
-        left = text_line["Geometry"]["BoundingBox"]["Left"]
-        top = text_line["Geometry"]["BoundingBox"]["Top"]
-        max_width = text_line["Geometry"]["BoundingBox"]["Width"]
+        return translated_image
 
-        text = text_line["DetectedText"]
+    def change_text_line_on_image(self, image, text_line, translated_text):
+        left = text_line["bounding_box"]["Left"]
+        top = text_line["bounding_box"]["Top"]
+        max_width = text_line["bounding_box"]["Width"]
+
         text_color = "blue"
 
-        img = self.draw_text_on_image(image, text, left, top, text_color, max_width)
+        img = self.draw_text_on_image(image, translated_text, left, top, text_color, max_width)
 
         return img
 
