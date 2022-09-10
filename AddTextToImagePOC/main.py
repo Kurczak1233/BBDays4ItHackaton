@@ -11,7 +11,7 @@ image = Image.open(f'img/{file_test_name}')
 
 translated_image = image
 
-for x in filtered_response:
-    translated_image = translate_text_on_image(translated_image, x)
+for text_line in filtered_response:
+    translated_image = translate_text_on_image(translated_image, text_line)
 
 translated_image.save(f'output/{file_test_name}')
