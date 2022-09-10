@@ -2,8 +2,6 @@ from PIL import Image, ImageFont
 from PIL import ImageDraw
 
 
-
-
 def translate_text_on_image(image, text_line):
     left = text_line["Geometry"]["BoundingBox"]["Left"]
     top = text_line["Geometry"]["BoundingBox"]["Top"]
