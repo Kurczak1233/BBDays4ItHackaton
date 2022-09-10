@@ -2,7 +2,7 @@ import json
 
 
 def get_ocr_response():
-    f = open('response_examples/test_reponse.json')
+    f = open('response_examples/test2_reponse.json')
     x = json.load(f)
     return x["TextDetections"]
 

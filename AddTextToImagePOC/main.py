@@ -6,7 +6,7 @@ from ocr_response_handler import get_ocr_response, filter_only_lines_in_response
 response = get_ocr_response()
 filtered_response = filter_only_lines_in_response(response)
 
-file_test_name = "test.jpg"
+file_test_name = "test2.png"
 image = Image.open(f'img/{file_test_name}')
 
 translated_image = image
