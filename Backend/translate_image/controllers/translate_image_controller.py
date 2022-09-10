@@ -2,12 +2,12 @@ import io
 import json
 
 from translate_image.aws.rekognition_provider import RekognitionProvider
-from translate_image.services.image_downloader import ImageDownloader
+from translate_image.services.image_downloader_service import ImageDownloaderService
 
 
 class TranslateImageController:
     def __init__(self):
-        self.image_downloader = ImageDownloader()
+        self.image_downloader = ImageDownloaderService()
         self.recognition_provider = RekognitionProvider()
 
     def execute(self, url):
