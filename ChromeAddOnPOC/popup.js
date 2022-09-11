@@ -1,4 +1,32 @@
-let translateBtn = document.getElementById("translate");
+const translateBtn = document.getElementById("translate");
+
+const activeLangClassName = "lang-button-active";
+const enLangElement = document.getElementById("en-lang");
+const nlLangElement = document.getElementById("nl-lang");
+const deLangElement = document.getElementById("de-lang");
+const frLangElement = document.getElementById("fr-lang");
+const esLangElement = document.getElementById("es-lang");
+const langElements = [
+  enLangElement,
+  nlLangElement,
+  deLangElement,
+  frLangElement,
+  esLangElement,
+];
+
+langElements.forEach((element) => {
+  element.addEventListener("click", () => {
+    if (element.classList.contains(activeLangClassName)) {
+      return;
+    }
+
+    Array.from(document.querySelectorAll("div")).forEach((el) =>
+      el.classList.remove(activeLangClassName)
+    );
+
+    element.classList.add(activeLangClassName);
+  });
+});
 
 translateBtn.addEventListener("click", async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -10,7 +38,7 @@ translateBtn.addEventListener("click", async () => {
 });
 
 function translateImages() {
-  let images = document.getElementsByTagName("img");
+  const images = document.getElementsByTagName("img");
   console.log(images);
 
   for (let i = 0; i < images.length; i++) {

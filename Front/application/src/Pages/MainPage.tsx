@@ -1,17 +1,16 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-var */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./MainPage.module.scss";
-import axios from "axios";
 import InputField from "../components/InputField/InputField";
 import Button from "../components/Button/Button";
 import SelectField from "../components/SelectField/SelectField";
 import Spinner from "../components/Spinner/Spinner";
 
 const languageOptions = [
-  { value: "de", label: "German" },
+  { value: "de", label: "Deutch" },
   { value: "fr", label: "France" },
-  { value: "nl", label: "Netherlands" },
+  { value: "nl", label: "Dutch" },
   { value: "es", label: "Spain" },
   { value: "it", label: "Italy" },
 ];
@@ -19,73 +18,12 @@ const languageOptions = [
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
   const [language, setLanguage] = useState<string>("de");
-  const [showIFrame, setShowIFrame] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
-  const [html, setHtml] = useState<any>({ __html: "" });
   const [loading, setLoading] = useState(false);
-
-  // const applyInputLink = async () => {
-  //   // if (inputLink !== "" && inputLink) {
-  //   await setShowIFrame(true);
-  //   getPage();
-
-  //   // }
-  // };
-
-  // const iframeContent =
-  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //   // @ts-ignore
-  //   document.getElementById("iframe");
-  // console.log(iframeContent);
-
-  //   console.log(iframeContent);
-
-  //   http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=de&tl=bg
-
-  //http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de
-  // 1. SOURCE
-  // 2. DESTINATION
-
-  // const getPage = () => {
-  //   fetch(
-  //     "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de",
-  //     { method: "GET", mode: "no-cors" }
-  //   )
-  //     .then((response) => response.text())
-  //     .then((text) => setHtml({ __html: text }));
-  // };
-
-  // function googleTranslateElementInit() {
-  //   new google.translate.TranslateElement(
-  //     {
-  //       pageLanguage: "pl",
-  //       includedLanguages: "en",
-  //       autoDisplay: false,
-  //     },
-  //     "google_translate_element"
-  //   );
-  //   var a = document.querySelector("body");
-  //   a.selectedIndex = 1;
-  //   a.dispatchEvent(new Event("change"));
-  // }
-
-  // const fetchAsBlob = (url: RequestInfo | URL) =>
-  //   fetch(url, { mode: "no-cors" }).then((response) => response.blob());
-
-  // const convertBlobToBase64 = (blob: Blob) =>
-  //   new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.onerror = reject;
-  //     reader.onload = () => {
-  //       resolve(reader.result);
-  //     };
-  //     reader.readAsDataURL(blob);
-  //   });
-  //STONOGA
-  // https://i.ytimg.com/vi/oj0izftQFfQ/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLA6zpvjQ7LWst_uRiwb7vmj_WmhDg
-  //https://translated-images.s3.eu-central-1.amazonaws.com/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png_es.png
+  const [error, setError] = useState(false);
 
   const getImage = () => {
+    setError(false);
     setLoading(true);
     fetch(
       `https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/dev/translate?url=${inputLink}`,
@@ -96,15 +34,15 @@ const MainPage = () => {
       .then((request) => {
         return request.json();
       })
-      .then((text) => {
-        //babich.biz/content/images/2016/07/0-u_GtQqne9sxwrfT3.png
-        // setText(text.image);
+      .then(() => {
         setLoading(false);
         const replaceString = inputLink.replace(/[^a-zA-Z0-9 ]/g, "");
-        console.log(replaceString); // 👉️ 'hello 123 WORLD'
-
         const finalString = `https://translated-images.s3.eu-central-1.amazonaws.com/${replaceString}/${replaceString}_${language}.png`;
         setText(finalString);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
       });
   };
 
@@ -116,9 +54,11 @@ const MainPage = () => {
   return (
     <>
       <header className={styles.header}>Image Translator</header>
-      {html && <div dangerouslySetInnerHTML={html} />}
       <main className={styles.main}>
         {loading && <Spinner />}
+        {error && (
+          <span className={styles.error}>Oops! Something went wrong :(</span>
+        )}
         {text && (
           <>
             <SelectField
