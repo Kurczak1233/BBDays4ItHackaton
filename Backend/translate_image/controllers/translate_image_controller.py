@@ -40,7 +40,7 @@ class TranslateImageController:
 
         new_image = self.image_text_processor_service.change_text_on_image(image, text_processor_data, translated_text_array)
 
-        string_image = "data:image/png;base64, " + str(base64.b64encode(self._get_bytes_from_image(new_image)))
+        string_image = "data:image/png;base64, " + base64.b64encode(self._get_bytes_from_image(new_image)).decode('ascii')
 
         return {
             "statusCode": 200,
