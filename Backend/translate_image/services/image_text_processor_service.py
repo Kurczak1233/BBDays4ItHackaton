@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 
-class ImageTextProcessor:
+class ImageTextProcessorService:
 
     def change_text_on_image(self, image: Image, text_lines_to_translate, translated_text_array):
         translated_image = image
@@ -58,7 +58,7 @@ class ImageTextProcessor:
 
     def _get_font(self, txt: str, max_width: int):
         font_size = 1
-        font_name = "segoeui.ttf"
+        font_name = "./arial.ttf"
         font = ImageFont.truetype(font_name, font_size)
 
         while font.getsize(txt)[0] < max_width:
