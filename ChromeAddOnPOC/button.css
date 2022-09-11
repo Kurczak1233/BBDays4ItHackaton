@@ -1,12 +1,18 @@
 button {
-  height: 80px;
+  height: 40px;
   width: 150px;
   outline: none;
   margin: 10px;
   border: none;
-  border-radius: 2px;
+  border-radius: 6px;
+  background-color: #3C967D;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
 }
-
-button.current {
-  box-shadow: 0 0 0 2px white, 0 0 0 4px black;
+button:hover {
+  border: 1px solid black;
 }
