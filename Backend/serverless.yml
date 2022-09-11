@@ -19,6 +19,12 @@ provider:
         - Effect: 'Allow'
           Resource: '*'
           Action: 'rekognition:DetectText'
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 's3:PutObject'
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 's3:PutObjectAcl'
   deploymentBucket:
     name: ${self:custom.prefix}-deployments
 
