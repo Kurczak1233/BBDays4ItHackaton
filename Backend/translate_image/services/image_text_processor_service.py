@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 
-class ImageTextProcessor:
+class ImageTextProcessorService:
 
     def change_text_on_image(self, image: Image, text_lines_to_translate, translated_text_array):
         translated_image = image
