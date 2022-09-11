@@ -3,15 +3,23 @@
 import { useEffect, useState } from "react";
 import styles from "./MainPage.module.scss";
 import axios from "axios";
+import InputField from "../components/InputField/InputField";
+import Button from "../components/Button/Button";
+import SelectField from "../components/SelectField/SelectField";
+import Spinner from "../components/Spinner/Spinner";
+
+const languageOptions = [
+  { value: "en", label: "English" },
+  { value: "de", label: "Deutsh" },
+];
 
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
+  const [language, setLanguage] = useState<string | undefined>("");
   const [showIFrame, setShowIFrame] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [html, setHtml] = useState<any>({ __html: "" });
-  const changeInputLink = (inputLink: string) => {
-    setInputLink(inputLink);
-  };
+  const [loading, setLoading] = useState(false);
 
   // const applyInputLink = async () => {
   //   // if (inputLink !== "" && inputLink) {
@@ -74,6 +82,7 @@ const MainPage = () => {
   // https://i.ytimg.com/vi/oj0izftQFfQ/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLA6zpvjQ7LWst_uRiwb7vmj_WmhDg
 
   const getImage = () => {
+    setLoading(true);
     fetch(
       `https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/dev/translate?url=${inputLink}`,
       {
@@ -83,38 +92,48 @@ const MainPage = () => {
       .then((request) => {
         return request.json();
       })
-      .then((text) => setText(text.image));
+      .then((text) => {
+        setText(text.image);
+        setLoading(false);
+      });
   };
 
   return (
     <>
-      <header className={styles.header}>Header</header>
+      <header className={styles.header}>Image Translator</header>
       {html && <div dangerouslySetInnerHTML={html} />}
       <main className={styles.main}>
-        <div className={styles.inputWrapper}>
-          <input
-            type={"text"}
+        {loading && <Spinner />}
+        {text && (
+          <>
+            <SelectField
+              options={languageOptions}
+              value={language}
+              onChange={setLanguage}
+              placeholder="Choose language"
+            />
+            <img src={text} />
+          </>
+        )}
+        <div className={styles.inputsWrapper}>
+          <InputField
             value={inputLink}
-            className={styles.input}
-            placeholder={"Type some link here..."}
-            onChange={(event) => changeInputLink(event.currentTarget.value)}
+            onChange={setInputLink}
+            placeholder="Paste your image URL here"
           />
         </div>
-        <img src={text} />
-        <img
-          src={
-            "https://translated-images.s3.eu-central-1.amazonaws.com/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png_it.png"
-          }
-        />
-        {/* <a
-          href={
-            "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de"
-          }
-          className={styles.confirmButton}
-        >
-          Translate
-        </a> */}
-        <div onClick={getImage}>test</div>
+        <div className={styles.buttonsWrapper}>
+          <Button
+            onClick={() => {
+              setInputLink("");
+              setText("");
+            }}
+            outlined
+          >
+            Clear
+          </Button>
+          <Button onClick={getImage}>Translate</Button>
+        </div>
       </main>
     </>
   );

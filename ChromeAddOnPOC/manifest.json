@@ -1,6 +1,6 @@
 {
-  "name": "Getting Started Example",
-  "description": "Build an Extension!",
+  "name": "ImageTranslator",
+  "description": "Browser extension built during hackaton!",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
@@ -14,5 +14,11 @@
   ],
   "action": {
     "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "/icons/icon16_with_white_background.png",
+    "32": "/icons/icon32.png",
+    "48": "/icons/icon48.png",
+    "128": "/icons/icon128.png"
   }
 }
