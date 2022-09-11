@@ -16,12 +16,16 @@ provider:
         - Effect: 'Allow'
           Resource: '*'
           Action: 'iam:DeleteBucket'
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 'rekognition:DetectText'
   deploymentBucket:
     name: ${self:custom.prefix}-deployments
 
 
 plugins:
   - serverless-deployment-bucket
+  - serverless-python-requirements
 
 custom:
   prefix: image-translator-${self:provider.stage}-${self:provider.region}
@@ -29,6 +33,8 @@ custom:
 functions:
   api:
     handler: translate_image.translate_image.translate
+    layers:
+      - arn:aws:lambda:eu-central-1:770693421928:layer:Klayers-p38-Pillow:4
     package:
       include:
         - ./translate_image/**
@@ -37,6 +43,6 @@ functions:
     events:
       - http:
           path: translate
-          method: ANY
+          method: GET
           cors:
             origin: '*'
