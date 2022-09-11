@@ -1,3 +1,9 @@
+let selectedLanguage = "";
+
+chrome.storage.sync.get("lang", ({ color }) => {
+  selectedLanguage = color;
+});
+
 const translateBtn = document.getElementById("translate");
 
 const activeLangClassName = "lang-button-active";
@@ -41,6 +47,8 @@ function translateImages() {
   const images = document.getElementsByTagName("img");
   console.log(images);
 
+  // console.log(selectedLanguage);
+
   for (let i = 0; i < images.length; i++) {
     if (images[i].width < 150 && images[i].height < 150) {
       continue;
@@ -52,7 +60,7 @@ function translateImages() {
 
     console.log("Sent");
     chrome.runtime.sendMessage(
-      { msg: "image", index: i, url: images[i].src },
+      { msg: "image", index: i, url: images[i].src, language: "nl" },
       function ({ data, index }) {
         images[index].src = data;
       }
