@@ -1,4 +1,3 @@
-// Initialize button with user's preferred color
 let translateBtn = document.getElementById("translate");
 
 translateBtn.addEventListener("click", async () => {
