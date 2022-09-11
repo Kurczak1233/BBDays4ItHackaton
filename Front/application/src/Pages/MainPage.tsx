@@ -9,8 +9,11 @@ import SelectField from "../components/SelectField/SelectField";
 import Spinner from "../components/Spinner/Spinner";
 
 const languageOptions = [
-  { value: "en", label: "English" },
-  { value: "de", label: "Deutsh" },
+  { value: "fr", label: "French" },
+  { value: "es", label: "Spanish" },
+  { value: "nl", label: "Dutch" },
+  { value: "de", label: "Deutch" },
+  { value: "it", label: "Italian" },
 ];
 
 const MainPage = () => {
@@ -20,6 +23,7 @@ const MainPage = () => {
   const [text, setText] = useState<string>("");
   const [html, setHtml] = useState<any>({ __html: "" });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   // const applyInputLink = async () => {
   //   // if (inputLink !== "" && inputLink) {
@@ -82,6 +86,7 @@ const MainPage = () => {
   // https://i.ytimg.com/vi/oj0izftQFfQ/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLA6zpvjQ7LWst_uRiwb7vmj_WmhDg
 
   const getImage = () => {
+    setError(false);
     setLoading(true);
     fetch(
       `https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/dev/translate?url=${inputLink}`,
@@ -95,6 +100,10 @@ const MainPage = () => {
       .then((text) => {
         setText(text.image);
         setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
       });
   };
 
@@ -104,6 +113,9 @@ const MainPage = () => {
       {html && <div dangerouslySetInnerHTML={html} />}
       <main className={styles.main}>
         {loading && <Spinner />}
+        {error && (
+          <span className={styles.error}>Oops! Something went wrong :(</span>
+        )}
         {text && (
           <>
             <SelectField
