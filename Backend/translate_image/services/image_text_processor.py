@@ -49,7 +49,7 @@ class ImageTextProcessor:
 
     def get_font(self, txt: str, max_width: int):
         font_size = 1
-        font_name = "segoeui.ttf"
+        font_name = "./arial.ttf"
         font = ImageFont.truetype(font_name, font_size)
 
         while font.getsize(txt)[0] < max_width:
