@@ -18,8 +18,10 @@ chrome.storage.sync.get("color", ({ color }) => {
       //Inner HTML powinien tylko podmienić nazwy
       //I frame nie idzie
       const parsedResult = JSON.parse(text)
-        .translations[0].text.replace(/([A-Z])/g, " $1")
+        .translations[0].text.trim()
+        .replace(/([A-Z])/g, " $1")
         .trim();
+      console.log(parsedResult);
       // console.log(document.body.innerText);
       // console.log(document.body.innerHTML);
       // console.log(whiteSpaces);

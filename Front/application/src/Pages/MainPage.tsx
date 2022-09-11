@@ -1,26 +1,31 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable no-var */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./MainPage.module.scss";
+import axios from "axios";
 
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
   const [showIFrame, setShowIFrame] = useState<boolean>(false);
-
+  const [text, setText] = useState<string>("");
+  const [html, setHtml] = useState<any>({ __html: "" });
   const changeInputLink = (inputLink: string) => {
     setInputLink(inputLink);
   };
 
-  const applyInputLink = async () => {
-    // if (inputLink !== "" && inputLink) {
-    await setShowIFrame(true);
-    // }
-  };
+  // const applyInputLink = async () => {
+  //   // if (inputLink !== "" && inputLink) {
+  //   await setShowIFrame(true);
+  //   getPage();
 
-  const iframeContent =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    document.getElementById("iframe");
-  console.log(iframeContent);
+  //   // }
+  // };
+
+  // const iframeContent =
+  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   // @ts-ignore
+  //   document.getElementById("iframe");
+  // console.log(iframeContent);
 
   //   console.log(iframeContent);
 
@@ -30,17 +35,14 @@ const MainPage = () => {
   // 1. SOURCE
   // 2. DESTINATION
 
-  //   const getPage = async () => {
-  //     const result = await fetch(
-  //       "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de",
-  //       { mode: "no-cors" }
-  //     );
-
-  //     console.log(result);
-  //   };
-  //   useEffect(() => {
-  //     getPage();
-  //   }, []);
+  // const getPage = () => {
+  //   fetch(
+  //     "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de",
+  //     { method: "GET", mode: "no-cors" }
+  //   )
+  //     .then((response) => response.text())
+  //     .then((text) => setHtml({ __html: text }));
+  // };
 
   // function googleTranslateElementInit() {
   //   new google.translate.TranslateElement(
@@ -56,36 +58,59 @@ const MainPage = () => {
   //   a.dispatchEvent(new Event("change"));
   // }
 
+  // const fetchAsBlob = (url: RequestInfo | URL) =>
+  //   fetch(url, { mode: "no-cors" }).then((response) => response.blob());
+
+  // const convertBlobToBase64 = (blob: Blob) =>
+  //   new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.onerror = reject;
+  //     reader.onload = () => {
+  //       resolve(reader.result);
+  //     };
+  //     reader.readAsDataURL(blob);
+  //   });
+  //STONOGA
+  // https://i.ytimg.com/vi/oj0izftQFfQ/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLA6zpvjQ7LWst_uRiwb7vmj_WmhDg
+
+  const getImage = () => {
+    fetch(
+      `https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/dev/translate?url=${inputLink}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((request) => {
+        return request.json();
+      })
+      .then((text) => setText(text.image));
+  };
+
   return (
     <>
       <header className={styles.header}>Header</header>
-      {showIFrame ? (
-        <iframe
-          id={"iframe"}
-          height={"100%"}
-          width={"100%"}
-          src={`https://pl-reactjs-org.translate.goog/?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=pl`}
-        ></iframe>
-      ) : (
-        <main className={styles.main}>
-          <div className={styles.inputWrapper}>
-            <input
-              type={"text"}
-              value={inputLink}
-              className={styles.input}
-              placeholder={"Type some link here..."}
-              onChange={(event) => changeInputLink(event.currentTarget.value)}
-            />
-          </div>
-          <div
-            className={styles.confirmButton}
-            onClick={() => applyInputLink()}
-          >
-            Translate
-          </div>
-        </main>
-      )}
-      <footer>Nazywam się Michał. Pochodzę z dużego miasta.</footer>
+      {html && <div dangerouslySetInnerHTML={html} />}
+      <main className={styles.main}>
+        <div className={styles.inputWrapper}>
+          <input
+            type={"text"}
+            value={inputLink}
+            className={styles.input}
+            placeholder={"Type some link here..."}
+            onChange={(event) => changeInputLink(event.currentTarget.value)}
+          />
+        </div>
+        <img src={text} />
+        {/* <a
+          href={
+            "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de"
+          }
+          className={styles.confirmButton}
+        >
+          Translate
+        </a> */}
+        <div onClick={getImage}>test</div>
+      </main>
     </>
   );
 };
