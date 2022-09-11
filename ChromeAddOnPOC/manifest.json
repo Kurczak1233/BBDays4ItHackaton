@@ -1,0 +1,19 @@
+{
+  "name": "Getting Started Example",
+  "description": "Build an Extension!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "https://some-random-api.ml/*",
+    "https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

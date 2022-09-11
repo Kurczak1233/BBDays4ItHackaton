@@ -1,0 +1,48 @@
+service: ${self:custom.prefix}
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  region: ${opt:region}
+  stage: ${opt:stage}
+  stackName: ${self:custom.prefix}-access
+  iam:
+    role:
+      name: ${self:custom.prefix}-access-role
+      statements:
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 'iam:DeleteBucket'
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 'rekognition:DetectText'
+  deploymentBucket:
+    name: ${self:custom.prefix}-deployments
+
+
+plugins:
+  - serverless-deployment-bucket
+  - serverless-python-requirements
+
+custom:
+  prefix: image-translator-${self:provider.stage}-${self:provider.region}
+
+functions:
+  api:
+    handler: translate_image.translate_image.translate
+    layers:
+      - arn:aws:lambda:eu-central-1:770693421928:layer:Klayers-p38-Pillow:4
+    package:
+      include:
+        - ./translate_image/**
+      exclude:
+        - ./**
+    events:
+      - http:
+          path: translate
+          method: GET
+          cors:
+            origin: '*'
