@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+/* eslint-disable no-var */
+import { useState } from "react";
 import styles from "./MainPage.module.scss";
-import { createPortal } from "react-dom";
 
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
@@ -42,6 +42,20 @@ const MainPage = () => {
   //     getPage();
   //   }, []);
 
+  // function googleTranslateElementInit() {
+  //   new google.translate.TranslateElement(
+  //     {
+  //       pageLanguage: "pl",
+  //       includedLanguages: "en",
+  //       autoDisplay: false,
+  //     },
+  //     "google_translate_element"
+  //   );
+  //   var a = document.querySelector("body");
+  //   a.selectedIndex = 1;
+  //   a.dispatchEvent(new Event("change"));
+  // }
+
   return (
     <>
       <header className={styles.header}>Header</header>
@@ -71,7 +85,7 @@ const MainPage = () => {
           </div>
         </main>
       )}
-      <footer>Footer</footer>
+      <footer>Nazywam się Michał. Pochodzę z dużego miasta.</footer>
     </>
   );
 };
