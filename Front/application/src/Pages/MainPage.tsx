@@ -3,9 +3,13 @@
 import { useEffect, useState } from "react";
 import styles from "./MainPage.module.scss";
 import axios from "axios";
+import InputField from "../components/InputField/InputField";
+import Button from "../components/Button/Button";
+import SelectField from "../components/SelectField/SelectField";
 
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
+  const [language, setLanguage] = useState<string>("");
   const [showIFrame, setShowIFrame] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [html, setHtml] = useState<any>({ __html: "" });
@@ -91,25 +95,25 @@ const MainPage = () => {
       <header className={styles.header}>Header</header>
       {html && <div dangerouslySetInnerHTML={html} />}
       <main className={styles.main}>
-        <div className={styles.inputWrapper}>
-          <input
-            type={"text"}
+        <img src={text} />
+        <div className={styles.inputsWrapper}>
+          <InputField
             value={inputLink}
-            className={styles.input}
-            placeholder={"Type some link here..."}
-            onChange={(event) => changeInputLink(event.currentTarget.value)}
+            onChange={changeInputLink}
+            placeholder="Paste your URL here"
+          />
+          <SelectField
+            options={["1", "2", "3"]}
+            onChange={setLanguage}
+            placeholder="Choose language"
           />
         </div>
-        <img src={text} />
-        {/* <a
-          href={
-            "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de"
-          }
-          className={styles.confirmButton}
-        >
-          Translate
-        </a> */}
-        <div onClick={getImage}>test</div>
+        <div className={styles.buttonsWrapper}>
+          <Button onClick={() => changeInputLink("")} outlined>
+            Clear
+          </Button>
+          <Button onClick={getImage}>Translate</Button>
+        </div>
       </main>
     </>
   );

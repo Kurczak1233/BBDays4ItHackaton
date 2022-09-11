@@ -1,0 +1,10 @@
+select {
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  font-size: x-large;
+  padding: 8px;
+}
+select:focus-visible {
+  outline: none;
+}
