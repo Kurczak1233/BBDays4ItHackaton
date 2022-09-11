@@ -28,12 +28,19 @@ function redirect() {
   console.log(images);
 
   for (let i = 0; i < images.length; i++) {
+    if (images[i].width < 150 && images[i].height < 150) {
+      continue;
+    }
+
+    if (images[i].src.includes("http") === false) {
+      continue;
+    }
+
     console.log("Sent");
     chrome.runtime.sendMessage(
-      { msg: "image", index: i },
+      { msg: "image", index: i, url: images[i].src },
       function ({ data, index }) {
-        console.log("imgsrc", data);
-        images[index].src = `data:image/jpeg;base64,${data}`;
+        images[index].src = data;
       }
     );
   }
