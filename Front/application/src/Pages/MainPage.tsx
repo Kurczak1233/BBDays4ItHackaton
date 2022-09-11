@@ -48,7 +48,7 @@ const MainPage = () => {
 
   const updateLanguage = (value: string) => {
     setLanguage(value);
-    setText((oldText) => oldText.slice(0, -6).concat(`${language}.png`));
+    setText((oldText) => oldText.slice(0, -6).concat(`${value}.png`));
   };
 
   return (
