@@ -9,13 +9,16 @@ import SelectField from "../components/SelectField/SelectField";
 import Spinner from "../components/Spinner/Spinner";
 
 const languageOptions = [
-  { value: "en", label: "English" },
-  { value: "de", label: "Deutsh" },
+  { value: "de", label: "German" },
+  { value: "fr", label: "France" },
+  { value: "nl", label: "Netherlands" },
+  { value: "es", label: "Spain" },
+  { value: "it", label: "Italy" },
 ];
 
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
-  const [language, setLanguage] = useState<string | undefined>("");
+  const [language, setLanguage] = useState<string>("de");
   const [showIFrame, setShowIFrame] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [html, setHtml] = useState<any>({ __html: "" });
@@ -80,6 +83,7 @@ const MainPage = () => {
   //   });
   //STONOGA
   // https://i.ytimg.com/vi/oj0izftQFfQ/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLA6zpvjQ7LWst_uRiwb7vmj_WmhDg
+  //https://translated-images.s3.eu-central-1.amazonaws.com/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png_es.png
 
   const getImage = () => {
     setLoading(true);
@@ -93,9 +97,20 @@ const MainPage = () => {
         return request.json();
       })
       .then((text) => {
-        setText(text.image);
+        //babich.biz/content/images/2016/07/0-u_GtQqne9sxwrfT3.png
+        // setText(text.image);
         setLoading(false);
+        const replaceString = inputLink.replace(/[^a-zA-Z0-9 ]/g, "");
+        console.log(replaceString); // 👉️ 'hello 123 WORLD'
+
+        const finalString = `https://translated-images.s3.eu-central-1.amazonaws.com/${replaceString}/${replaceString}_${language}.png`;
+        setText(finalString);
       });
+  };
+
+  const updateLanguage = (value: string) => {
+    setLanguage(value);
+    setText((oldText) => oldText.slice(0, -6).concat(`${language}.png`));
   };
 
   return (
@@ -109,7 +124,7 @@ const MainPage = () => {
             <SelectField
               options={languageOptions}
               value={language}
-              onChange={setLanguage}
+              onChange={(value) => updateLanguage(value ? value : "de")}
               placeholder="Choose language"
             />
             <img src={text} />
