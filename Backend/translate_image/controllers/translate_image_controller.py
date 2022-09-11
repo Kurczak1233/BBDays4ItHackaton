@@ -1,5 +1,6 @@
 import base64
 import io
+import json
 
 from translate_image.aws.rekognition_provider import RekognitionProvider
 from translate_image.services.image_downloader_service import ImageDownloaderService
@@ -40,14 +41,17 @@ class TranslateImageController:
 
         new_image = self.image_text_processor_service.change_text_on_image(image, text_processor_data, translated_text_array)
 
-        string_image = base64.b64encode(self._get_bytes_from_image(new_image)).decode('ascii')
+        string_image = "data:image/png;base64, " + base64.b64encode(self._get_bytes_from_image(new_image)).decode('ascii')
 
         return {
             "statusCode": 200,
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*'
             },
-            "body": string_image
+            "body": json.dumps({'image': string_image})
         }
 
     def _get_bytes_from_image(self, image):
