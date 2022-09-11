@@ -11,21 +11,12 @@ chrome.runtime.onMessage.addListener(function (
   senderResponse
 ) {
   if (message.msg === "image") {
-    const imgUrl =
-      "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
-    const fetchUrl = `https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/dev/translate?url=${imgUrl}`;
-    fetch(fetchUrl, {
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-      })
+    const fetchUrl = `https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/dev/translate?url=${message.url}`;
+    fetch(fetchUrl)
+      .then((response) => response.text())
       .then((data) => {
-        console.log(data[0]);
-        senderResponse({ data: data, index: message.index });
+        let dataObj = JSON.parse(data);
+        senderResponse({ data: dataObj.image, index: message.index });
       })
       .catch((error) => console.log("error", error));
     return true; // Will respond asynchronously.
