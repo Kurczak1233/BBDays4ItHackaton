@@ -6,13 +6,14 @@ import InputField from "../components/InputField/InputField";
 import Button from "../components/Button/Button";
 import SelectField from "../components/SelectField/SelectField";
 import Spinner from "../components/Spinner/Spinner";
+import { saveAs } from "file-saver";
 
 const languageOptions = [
   { value: "de", label: "Deutch" },
-  { value: "fr", label: "France" },
+  { value: "fr", label: "French" },
   { value: "nl", label: "Dutch" },
-  { value: "es", label: "Spain" },
-  { value: "it", label: "Italy" },
+  { value: "es", label: "Spanish" },
+  { value: "it", label: "Italian" },
 ];
 
 const MainPage = () => {
@@ -48,7 +49,11 @@ const MainPage = () => {
 
   const updateLanguage = (value: string) => {
     setLanguage(value);
-    setText((oldText) => oldText.slice(0, -6).concat(`${value}.png`));
+    if (text)
+      setText((oldText) => oldText.slice(0, -6).concat(`${value}.png`));
+  };
+  const downloadImage = () => {
+    saveAs(text);
   };
 
   return (
@@ -61,13 +66,12 @@ const MainPage = () => {
         )}
         {text && (
           <>
-            <SelectField
-              options={languageOptions}
-              value={language}
-              onChange={(value) => updateLanguage(value ? value : "de")}
-              placeholder="Choose language"
-            />
             <img src={text} />
+            <div className={styles.buttonsWrapper}>
+              <Button onClick={downloadImage} outlined>
+                Download
+              </Button>
+            </div>
           </>
         )}
         <div className={styles.inputsWrapper}>
@@ -76,11 +80,18 @@ const MainPage = () => {
             onChange={setInputLink}
             placeholder="Paste your image URL here"
           />
+          <SelectField
+            options={languageOptions}
+            value={language}
+            onChange={(value) => updateLanguage(value ?? "de")}
+            placeholder="Choose language"
+          />
         </div>
         <div className={styles.buttonsWrapper}>
           <Button
             onClick={() => {
               setInputLink("");
+              setLanguage("");
               setText("");
             }}
             outlined

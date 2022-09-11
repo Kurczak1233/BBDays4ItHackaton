@@ -35,10 +35,6 @@ class TranslateImageController:
 
         for text_detection in text_detections:
             text = text_detection["DetectedText"]
-
-            if not any(c.isalpha() for c in text):
-                continue
-
             type = text_detection["Type"]
             bounding_box = text_detection["Geometry"]["BoundingBox"]
 
