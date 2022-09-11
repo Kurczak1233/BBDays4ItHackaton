@@ -1,77 +1,95 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-var */
+import { useState } from "react";
 import styles from "./MainPage.module.scss";
-import { createPortal } from "react-dom";
+import InputField from "../components/InputField/InputField";
+import Button from "../components/Button/Button";
+import SelectField from "../components/SelectField/SelectField";
+import Spinner from "../components/Spinner/Spinner";
+
+const languageOptions = [
+  { value: "de", label: "Deutch" },
+  { value: "fr", label: "France" },
+  { value: "nl", label: "Dutch" },
+  { value: "es", label: "Spain" },
+  { value: "it", label: "Italy" },
+];
 
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
-  const [showIFrame, setShowIFrame] = useState<boolean>(false);
+  const [language, setLanguage] = useState<string>("de");
+  const [text, setText] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const changeInputLink = (inputLink: string) => {
-    setInputLink(inputLink);
+  const getImage = () => {
+    setError(false);
+    setLoading(true);
+    fetch(
+      `https://kemxekil1f.execute-api.eu-central-1.amazonaws.com/dev/translate?url=${inputLink}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((request) => {
+        return request.json();
+      })
+      .then(() => {
+        setLoading(false);
+        const replaceString = inputLink.replace(/[^a-zA-Z0-9 ]/g, "");
+        const finalString = `https://translated-images.s3.eu-central-1.amazonaws.com/${replaceString}/${replaceString}_${language}.png`;
+        setText(finalString);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
   };
 
-  const applyInputLink = async () => {
-    // if (inputLink !== "" && inputLink) {
-    await setShowIFrame(true);
-    // }
+  const updateLanguage = (value: string) => {
+    setLanguage(value);
+    setText((oldText) => oldText.slice(0, -6).concat(`${language}.png`));
   };
-
-  const iframeContent =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    document.getElementById("iframe");
-  console.log(iframeContent);
-
-  //   console.log(iframeContent);
-
-  //   http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=de&tl=bg
-
-  //http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de
-  // 1. SOURCE
-  // 2. DESTINATION
-
-  //   const getPage = async () => {
-  //     const result = await fetch(
-  //       "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de",
-  //       { mode: "no-cors" }
-  //     );
-
-  //     console.log(result);
-  //   };
-  //   useEffect(() => {
-  //     getPage();
-  //   }, []);
 
   return (
     <>
-      <header className={styles.header}>Header</header>
-      {showIFrame ? (
-        <iframe
-          id={"iframe"}
-          height={"100%"}
-          width={"100%"}
-          src={`https://pl-reactjs-org.translate.goog/?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=pl`}
-        ></iframe>
-      ) : (
-        <main className={styles.main}>
-          <div className={styles.inputWrapper}>
-            <input
-              type={"text"}
-              value={inputLink}
-              className={styles.input}
-              placeholder={"Type some link here..."}
-              onChange={(event) => changeInputLink(event.currentTarget.value)}
+      <header className={styles.header}>Image Translator</header>
+      <main className={styles.main}>
+        {loading && <Spinner />}
+        {error && (
+          <span className={styles.error}>Oops! Something went wrong :(</span>
+        )}
+        {text && (
+          <>
+            <SelectField
+              options={languageOptions}
+              value={language}
+              onChange={(value) => updateLanguage(value ? value : "de")}
+              placeholder="Choose language"
             />
-          </div>
-          <div
-            className={styles.confirmButton}
-            onClick={() => applyInputLink()}
+            <img src={text} />
+          </>
+        )}
+        <div className={styles.inputsWrapper}>
+          <InputField
+            value={inputLink}
+            onChange={setInputLink}
+            placeholder="Paste your image URL here"
+          />
+        </div>
+        <div className={styles.buttonsWrapper}>
+          <Button
+            onClick={() => {
+              setInputLink("");
+              setText("");
+            }}
+            outlined
           >
-            Translate
-          </div>
-        </main>
-      )}
-      <footer>Footer</footer>
+            Clear
+          </Button>
+          <Button onClick={getImage}>Translate</Button>
+        </div>
+      </main>
     </>
   );
 };

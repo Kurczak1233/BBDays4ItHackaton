@@ -1,54 +1,61 @@
-// Initialize button with user's preferred color
-let redirectBtn = document.getElementById("redirect");
+const translateBtn = document.getElementById("translate");
 
-redirectBtn.addEventListener("click", async () => {
+const activeLangClassName = "lang-button-active";
+const enLangElement = document.getElementById("en-lang");
+const nlLangElement = document.getElementById("nl-lang");
+const deLangElement = document.getElementById("de-lang");
+const frLangElement = document.getElementById("fr-lang");
+const esLangElement = document.getElementById("es-lang");
+const langElements = [
+  enLangElement,
+  nlLangElement,
+  deLangElement,
+  frLangElement,
+  esLangElement,
+];
+
+langElements.forEach((element) => {
+  element.addEventListener("click", () => {
+    if (element.classList.contains(activeLangClassName)) {
+      return;
+    }
+
+    Array.from(document.querySelectorAll("div")).forEach((el) =>
+      el.classList.remove(activeLangClassName)
+    );
+
+    element.classList.add(activeLangClassName);
+  });
+});
+
+translateBtn.addEventListener("click", async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    func: redirect,
+    func: translateImages,
   });
 });
 
-function redirect() {
-  //   TODO: We need to run this code after tab reload..
-  //   var imgs = document.getElementsByTagName("img");
-  //   var imgSrcs = [];
-  //   for (var i = 0; i < imgs.length; i++) {
-  //     imgSrcs.push(imgs[i].src);
-  //   }
-  //   console.log(imgs);
-
-  //   const currentUrl = window.location.href;
-  //   const targetLanguage = "pl";
-  //   const url = `http://translate.google.com/translate?hl=${targetLanguage}&ie=UTF-8&u=${currentUrl}&sl=de&tl=${targetLanguage}`;
-  //   location.replace(url);
-
-  let images = document.getElementsByTagName("img");
+function translateImages() {
+  const images = document.getElementsByTagName("img");
   console.log(images);
 
   for (let i = 0; i < images.length; i++) {
+    if (images[i].width < 150 && images[i].height < 150) {
+      continue;
+    }
+
+    if (images[i].src.includes("http") === false) {
+      continue;
+    }
+
     console.log("Sent");
     chrome.runtime.sendMessage(
-      { msg: "image", index: i },
+      { msg: "image", index: i, url: images[i].src },
       function ({ data, index }) {
-        console.log("imgsrc", data);
-        images[index].src = `data:image/jpeg;base64,${data}`;
+        images[index].src = data;
       }
     );
   }
-
-  //   let images = document.getElementsByTagName("img");
-  //   console.log(images);
-  //   for (let i = 0; i < images.length; i++) {
-  //     console.log("Sent");
-  //     console.log(object);
-  //     chrome.runtime.sendMessage(
-  //       { msg: "image", index: i, link: images[index].src },
-  //       function ({ data, index }) {
-  //         console.log("hej");
-  //         images[index].src = `data:image/jpeg;base64, ${data}`;
-  //       }
-  //     );
-  //   }
 }
