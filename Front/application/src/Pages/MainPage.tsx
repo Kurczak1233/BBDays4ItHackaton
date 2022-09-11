@@ -101,6 +101,11 @@ const MainPage = () => {
           />
         </div>
         <img src={text} />
+        <img
+          src={
+            "https://translated-images.s3.eu-central-1.amazonaws.com/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png/httpsdocinfogixsaascomgovernContentResourcesImagesuserguidegovernnavigation5800x401png_it.png"
+          }
+        />
         {/* <a
           href={
             "http://translate.google.com/translate?hl=bg&ie=UTF-8&u=https://pl.reactjs.org/&sl=pl&tl=de"

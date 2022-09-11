@@ -1,5 +1,15 @@
 // Initialize button with user's preferred color
 let redirectBtn = document.getElementById("redirect");
+let buttons = document.getElementsByClassName("lang-button");
+
+buttons.addEventListener("click", async () => {
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: removeActiveClass,
+  });
+});
 
 redirectBtn.addEventListener("click", async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -9,6 +19,11 @@ redirectBtn.addEventListener("click", async () => {
     func: redirect,
   });
 });
+
+function removeActiveClass () {
+  console.log("test");
+  buttons.classList.remove("lang-button-active");
+}
 
 function redirect() {
   //   TODO: We need to run this code after tab reload..
