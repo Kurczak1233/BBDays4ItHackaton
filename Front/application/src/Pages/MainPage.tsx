@@ -7,9 +7,14 @@ import InputField from "../components/InputField/InputField";
 import Button from "../components/Button/Button";
 import SelectField from "../components/SelectField/SelectField";
 
+const languageOptions = [
+  { value: "en", label: "English" },
+  { value: "de", label: "Deutsh" },
+];
+
 const MainPage = () => {
   const [inputLink, setInputLink] = useState<string>("");
-  const [language, setLanguage] = useState<string>("");
+  const [language, setLanguage] = useState<string | undefined>("");
   const [showIFrame, setShowIFrame] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [html, setHtml] = useState<any>({ __html: "" });
@@ -100,16 +105,23 @@ const MainPage = () => {
           <InputField
             value={inputLink}
             onChange={changeInputLink}
-            placeholder="Paste your URL here"
+            placeholder="Paste your image URL here"
           />
           <SelectField
-            options={["1", "2", "3"]}
+            options={languageOptions}
+            value={language}
             onChange={setLanguage}
             placeholder="Choose language"
           />
         </div>
         <div className={styles.buttonsWrapper}>
-          <Button onClick={() => changeInputLink("")} outlined>
+          <Button
+            onClick={() => {
+              changeInputLink("");
+              setText("");
+            }}
+            outlined
+          >
             Clear
           </Button>
           <Button onClick={getImage}>Translate</Button>

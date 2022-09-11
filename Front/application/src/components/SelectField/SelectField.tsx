@@ -1,24 +1,22 @@
-import styles from "./SelectField.module.scss";
+import Select from "react-select";
+import { customSelectFieldStyles } from "./customSelectFieldStyles";
 
 interface Props {
-  options: string[];
-  onChange: (value: string) => void;
+  options: { value: string; label: string }[];
+  value?: string;
+  onChange: (value?: string) => void;
   placeholder?: string;
 }
 
-const SelectField = ({ options, onChange, placeholder }: Props) => {
+const SelectField = ({ options, value, onChange, placeholder }: Props) => {
   return (
-    <select
-      className={styles.select}
-      onChange={(e) => onChange(e.target.value)}
-    >
-      {placeholder && <option hidden>{placeholder}</option>}
-      {options.map((option) => (
-        <option value={option} key={option}>
-          {option}
-        </option>
-      ))}
-    </select>
+    <Select
+      options={options}
+      value={options.filter((option) => value === option.value)}
+      onChange={(option) => onChange(option?.value)}
+      placeholder={placeholder ?? ""}
+      styles={customSelectFieldStyles}
+    />
   );
 };
 
