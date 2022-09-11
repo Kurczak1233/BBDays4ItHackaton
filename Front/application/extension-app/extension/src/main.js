@@ -11,6 +11,7 @@ export async function changeColor() {
           console.error("Script injection failed: " + chrome.runtime.lastError.message);
         }
       })
+      //Nasłuchuj czy url stronki się zmienił jeśli tak: => executeScripts
     }
   ));
   
