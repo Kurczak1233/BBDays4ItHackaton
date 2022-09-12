@@ -9,7 +9,7 @@ import Spinner from "../components/Spinner/Spinner";
 import { saveAs } from "file-saver";
 
 const languageOptions = [
-  { value: "de", label: "Deutch" },
+  { value: "de", label: "Deutsch" },
   { value: "fr", label: "French" },
   { value: "nl", label: "Dutch" },
   { value: "es", label: "Spanish" },
@@ -49,8 +49,7 @@ const MainPage = () => {
 
   const updateLanguage = (value: string) => {
     setLanguage(value);
-    if (text)
-      setText((oldText) => oldText.slice(0, -6).concat(`${value}.png`));
+    if (text) setText((oldText) => oldText.slice(0, -6).concat(`${value}.png`));
   };
   const downloadImage = () => {
     saveAs(text);
